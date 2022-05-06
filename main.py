@@ -1,121 +1,123 @@
+# importowanie:
 from tkinter import *
 from tkinter import filedialog
+import matplotlib.pyplot as plt
+from openpyxl import workbook, load_workbook
+import os
+import pandas as pd
+# ==========================================
+# ==========================================
+# Funckje/klasy:
+class Dane:
+    def __init__(self):
+        self.plikdane = []
+        self.danenaglowki = []
+        self.dowykresu = []
 
-# from openpyxl import workbook, load_workbook
-
-# główne okno programu
-root = Tk()
-root.title("DATA ANALISYS")
-root.geometry("720x480")
-# ---
-
-
+# --- Otwarcie pliku, zapisanie danych do klasy
+def open():
+    # initialdir="/"
+    root.filename = filedialog.askopenfilename(initialdir="/", title="select a file", filetypes=(
+        ("xlsx files", "*.xlsx"), ("txt files", "*.txt"), ("all type", "*.*")))
+    wpisywanieplikow.delete(0, "end")
+    wpisywanieplikow.insert(0, root.filename)
+    # zapisanie danych do zmiennej w klasie:
+    new2.plikdane = pd.read_excel(wpisywanieplikow.get())
+    # zapisanie nazw naglowkow do zmiennej w klasie
+    new2.danenaglowki = new2.plikdane.columns
+    # wyswietlenie tych danych
+    niewiem = Label(root, text=new2.plikdane)
+    niewiem.pack()
+    print(new2.danenaglowki)
+    print(len(new2.danenaglowki))
+    xdd2()
 # ---
 def funkcja_start():
 
     if varpdf.get() and (var1.get() or var2.get() or var3.get()):
         # generuj plik pdf z wynikami.
-        testyyy = Label(root, text=varpdf.get())
-        testyyy.grid(row=9, column=0)
+        print("Generuj PDF")
     elif (var1.get() or var2.get() or var3.get()) and wpisywanieplikow.get():
         podglad = Toplevel()
         if var1.get():
-            komunikat1 = Label(podglad, text="var1. wykres")
-            komunikat1.pack()
+            wykres()
         if var2.get():
-            liczenie_mediana()
-
-            # wb = load_workbook('testy_arkusz.xlsx')
-            # ws = wb.active
-
             komunikat2 = Label(podglad, text="var2. Mediana")
-            komunikat2a = Label(podglad, text=int(wynik_med[0]))
             komunikat2.pack()
-            komunikat2a.pack()
         if var3.get():
             komunikat3 = Label(podglad, text="var3. srednia")
             komunikat3.pack()
     else:
-        testyyy2 = Label(root, text="Zaznacz pożądane opcje")
-        testyyy2.grid(row=8, column=2)
-
-
-wynik_med = []
-
-    # Obliczenia wszystkie
-
-    # Podgląd wyników w nowym oknie
-
-
-
+        print("Zaznacz jakies opcje ")
 # ---
+def xdd2():
+    clicked1 = StringVar()
+    clicked2 = StringVar()
+
+    clicked1.set(new2.danenaglowki[0])
+    clicked2.set(new2.danenaglowki[1])
+
+    drop1 = OptionMenu(root, clicked1, *new2.danenaglowki)
+    drop2 = OptionMenu(root, clicked2, *new2.danenaglowki)
+    drop1.pack()
+    drop2.pack()
+    a1 = clicked1.get()
+    a2 = clicked2.get()
+    print("Naglowek_1 " + clicked1.get())
+    print("Naglowek_2 " + clicked2.get())
+    drop_przycisk = Button(root, text="zapisz", command=lambda: test(clicked1.get(), clicked2.get()))
+    drop_przycisk.pack()
 # ---
-def liczenie_mediana():
+def test(a, b):
+    print("zapisano")
+    new2.dowykresu = [a, b]
+    for i in range(0, len(new2.dowykresu)):
+        print("co zostalo klikniete: " + str(new2.dowykresu[i]))
+
+def wykres():
+    x1 = new2.dowykresu[0]
+    y1 = new2.dowykresu[1]
+    # print(x1 + " " + y1)
+    new2.plikdane.plot(x=x1, y=y1)
+    plt.show()
 
 
+# df = pd.read_csv(r'https://analityk.edu.pl/wp-content/uploads/2020/12/data.csv')
+# df['date'] = pd.to_datetime(df.date, format='%d/%m/%Y')
+# x=df['date']
+# y=df['Close']
+# plt.plot(x,y)
 
-    aa1 = 5
-    aa2 = 6
-    aa3 = 2
-    aa4 = 8
-    ans1 = aa1 + aa3 * aa4 - aa2
-    wynik_med.append(ans1)
+# df.plot(x='date',y='Close', legend=False)
+
+# ==========================================
+# ==========================================
+# MAIN:
+root = Tk()
+root.title("DATA ANALISYS")
 # ---
-def open():
-    root.filename = filedialog.askopenfilename(initialdir="/", title="select a file", filetypes=(
-        ("txt files", "*.txt"), ("xlsx files", "*.xlsx"), ("all type", "*.*")))
-    wpisywanieplikow.delete(0, "end")
-    wpisywanieplikow.insert(0, root.filename)
-# ---
+new2 = Dane()
 
-
-# ---
-# GUI programu:
-xd = "sdsd"
-opis = "Witaj w programie do analizy danych.\n Aby rozpocząć wybierz plik, a następnie zaznacz \ninteresujące cię opcję.\n " \
-       "Po wciśnięciu przycisku start wyświetli się podgląd z wynikami \n a jeśli chcesz aby wyniki pojawiły się w pliku pdf,\n wystarczy że zaznaczysz opcję generuj pdf\n" \
-       "i po wciśnięciu przycisku start zamiast podglądów\n wygeneruje ci się plik pdf z tymi wszystkimi wynikami."
-# creating a label widget
-myLabel = Label(root, text="DATA ANALISYS")
-mypusto = Label(root, text="                             ")
-mypusto2 = Label(root, text="                             ")
 wpisywanieplikow  = Entry(root, width=35, borderwidth=5)
+wpisywanieplikow.pack()
 przycisk_pliki = Button(root, text="Open file", command=open)
-myopisheader = Label(root, text="OPIS")
-myopis = Label(root, text=opis)
-
+przycisk_pliki.pack()
 var1 = IntVar()
 opcja1 = Checkbutton(root, text="Wykres", variable=var1)
+opcja1.pack()
 var2 = IntVar()
 opcja2 = Checkbutton(root, text="Mediana", variable=var2)
+opcja2.pack()
 var3 = IntVar()
 opcja3 = Checkbutton(root, text="Srednia", variable=var3)
+opcja3.pack()
 varpdf = IntVar()
 opcjapdf = Checkbutton(root, text="generuj pdf", variable=varpdf)
+opcjapdf.pack()
 
+przycisk_start = Button(root, text="Start", command=funkcja_start)
+przycisk_start.pack()
 
-myStart = Button(root, text="Start", command=funkcja_start)
-
-
-# shoving it onto the screen
-myLabel.grid(row=0, column=1)
-mypusto.grid(row=1, column=0)
-mypusto2.grid(row=2, column=0)
-wpisywanieplikow.grid(row=3, column=0)
-przycisk_pliki.grid(row=3, column=1)
-myopisheader.grid(row=3, column=2)
-myopis.grid(row=4, column=2)
-
-opcja1.grid(row=4, column=0)
-opcja2.grid(row=5, column=0)
-opcja3.grid(row=6, column=0)
-
-opcjapdf.grid(row=7, column=0)
-
-myStart.grid(row=9, column=2)
-# ----
-
-
-
-# ---
 root.mainloop()
+# ==========================================
+# ==========================================
