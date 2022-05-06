@@ -112,7 +112,7 @@ var3 = IntVar()
 opcja3 = Checkbutton(root, text="Srednia", variable=var3)
 opcja3.pack()
 varpdf = IntVar()
-opcjapdf = Checkbutton(root, text="generuj pdf", variable=varpdf)
+opcjapdf = Checkbutton(root, text="generujj pdf", variable=varpdf)
 opcjapdf.pack()
 
 przycisk_start = Button(root, text="Start", command=funkcja_start)
