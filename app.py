@@ -254,7 +254,7 @@ class Dane:
 # --- Otwarcie pliku, zapisanie danych do klasy
 def open():
     # initialdir="/"
-    app.data_analysis.filename = filedialog.askopenfilename(initialdir="/A:Studiaaaa/SEMESTR_4/IO/PROJEKT/program", title="select a file", filetypes=(
+    app.data_analysis.filename = filedialog.askopenfilename(initialdir="/", title="select a file", filetypes=(
         ("xlsx files", "*.xlsx"), ("txt files", "*.txt"), ("all type", "*.*")))
     app.nazwa_pliku.delete(0, "end")
     app.nazwa_pliku.insert(0, app.data_analysis.filename)
